@@ -1,7 +1,14 @@
 #!/usr/bin/env sh
 
 git_commit(){
-    read -d# -p "Please enter a multiline commit message and end with #: " msg
+    #read -d# -p "Please enter a multiline commit message and end with #: " msg
+    echo "Please enter Notepad to create commit message"
+    tmp="commit_msg.txt" # create_tempfile
+    copy NUL $tmp
+    notepad $tmp
+    msg=$(cat < "$tmp")
+    rm -f -- "$tmp"
+    
     git add --all
     git commit -m "$msg"
 }
@@ -41,6 +48,7 @@ check_commit(){
         echo "... No changes found"
     fi
 }
+
 
 run(){
     local run_mode="$1"
