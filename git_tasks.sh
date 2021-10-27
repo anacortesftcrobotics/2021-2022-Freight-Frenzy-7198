@@ -1,12 +1,14 @@
 #!/usr/bin/env sh
 
-REPO_NAME="2021-2022-Freight-Frenzy-7198"
+CURRENT=`pwd`
+REPO_NAME=`basename "$CURRENT"`
+#REPO_NAME="2021-2022-Freight-Frenzy-7198"
 GITHUB_DOMAIN="@github.com/anacortesftcrobotics/$REPO_NAME.git"
 git_commit(){
-    #echo "Please enter a commit message..."
-    read -d# -p "Please enter a commit message and end with #: " msg
+    read -d# -p "Please enter a multiline commit message and end with #: " msg
     git add --all
     git commit -m "$msg"
+    git_push
 }
 
 git_push() {
@@ -36,8 +38,19 @@ check_commit(){
 }
 
 deploy(){
-    cd ~/Desktop/2021-2022-Freight-Frenzy-7198
-    check_commit
+    FILE=".git"
+    if test -f "$FILE"; then
+        check_commit
+    else
+        echo "cannot continue, you are not in git repo head directory"
+        SOURCE="${BASH_SOURCE[0]}"
+        GOTO=`dirname $SOURCE | sed 's/^.\///' ` # get path without ./
+        echo "$SOURCE"
+        echo "$GOTO"
+        cd $GOTO
+        check_commit
+        #echo $PWD | echo "moved to: $0"
+    fi
 }
 
 "$@"
