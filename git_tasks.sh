@@ -1,9 +1,17 @@
 #!/usr/bin/env sh
-commit(){
+
+REPO_NAME="2021-2022-Freight-Frenzy-7198"
+GITHUB_DOMAIN="@github.com/anacortesftcrobotics/$REPO_NAME.git"
+git_commit(){
     #echo "Please enter a commit message..."
-    read -d# -p "Please enter a commit message...\n" msg
+    read -d# -p "Please enter a commit message and end with #: " msg
     git add --all
     git commit -m "$msg"
+}
+
+git_push() {
+    read -p "Please enter github token: " token
+    git push "https://$token$GITHUB_DOMAIN"
 }
 
 check_commit(){
@@ -15,10 +23,10 @@ check_commit(){
         echo "$changes"
         echo ""
         echo "You have uncomitted changes."
-        echo "Would you like to commit them (y/n)?"
-        read n
-        case $n in
-            "y") commit;;
+        read -n 1 -p "Would you like to commit and push them (y/n)?" commit
+        echo ""
+        case $commit in
+            "y") git_commit;;
             "n") echo "Changes will not be included...";;
             *) echo "invalid option";;
         esac
