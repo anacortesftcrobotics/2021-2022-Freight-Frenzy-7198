@@ -4,12 +4,22 @@ git_commit(){
     read -d# -p "Please enter a multiline commit message and end with #: " msg
     git add --all
     git commit -m "$msg"
-    git_push
+    check_push
 }
 
 git_push() {
     read -p "Please enter github token: " token
     git push "https://$token$GITHUB_DOMAIN"
+}
+
+check_push(){
+    read -n 1 -p "Would you like to push (y/n)?" push
+    echo ""
+    case $push in
+        "y") git_push;;
+        "n") echo "Changes will not be pushed...";;
+        *) echo "invalid option";;
+    esac
 }
 
 check_commit(){
@@ -21,7 +31,7 @@ check_commit(){
         echo "$changes"
         echo ""
         echo "You have uncomitted changes."
-        read -n 1 -p "Would you like to commit and push them (y/n)?" commit
+        read -n 1 -p "Would you like to commit (y/n)?" commit
         echo ""
         case $commit in
             "y") git_commit;;
