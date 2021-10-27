@@ -4,7 +4,7 @@ git_commit(){
     #read -d# -p "Please enter a multiline commit message and end with #: " msg
     echo "Please enter Notepad to create commit message"
     tmp="commit_msg.txt" # create_tempfile
-    copy NUL $tmp
+    touch $tmp
     notepad $tmp
     msg=$(cat < "$tmp")
     rm -f -- "$tmp"
