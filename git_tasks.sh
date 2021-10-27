@@ -1,9 +1,5 @@
 #!/usr/bin/env sh
 
-CURRENT=`pwd`
-REPO_NAME=`basename "$CURRENT"`
-#REPO_NAME="2021-2022-Freight-Frenzy-7198"
-GITHUB_DOMAIN="@github.com/anacortesftcrobotics/$REPO_NAME.git"
 git_commit(){
     read -d# -p "Please enter a multiline commit message and end with #: " msg
     git add --all
@@ -39,18 +35,15 @@ check_commit(){
 
 deploy(){
     FILE=".git"
-    if test -f "$FILE"; then
-        check_commit
-    else
-        echo "cannot continue, you are not in git repo head directory"
+    CURRENT=`pwd`
+    REPO_NAME=`basename "$CURRENT"`
+    GITHUB_DOMAIN="@github.com/anacortesftcrobotics/$REPO_NAME.git"
+    if [ ! -f "$FILE" ]; then
         SOURCE="${BASH_SOURCE[0]}"
         GOTO=`dirname $SOURCE | sed 's/^.\///' ` # get path without ./
-        echo "$SOURCE"
-        echo "$GOTO"
         cd $GOTO
-        check_commit
-        #echo $PWD | echo "moved to: $0"
     fi
+    check_commit
 }
 
 "$@"
