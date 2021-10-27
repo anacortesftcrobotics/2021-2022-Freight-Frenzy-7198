@@ -4,7 +4,6 @@ git_commit(){
     read -d# -p "Please enter a multiline commit message and end with #: " msg
     git add --all
     git commit -m "$msg"
-    check_push
 }
 
 git_push() {
@@ -43,17 +42,26 @@ check_commit(){
     fi
 }
 
-deploy(){
-    FILE=".git"
-    CURRENT=`pwd`
-    REPO_NAME=`basename "$CURRENT"`
-    GITHUB_DOMAIN="@github.com/anacortesftcrobotics/$REPO_NAME.git"
-    if [ ! -f "$FILE" ]; then
-        SOURCE="${BASH_SOURCE[0]}"
-        GOTO=`dirname $SOURCE | sed 's/^.\///' ` # get path without ./
-        cd $GOTO
+run(){
+    local run_mode="$1"
+    if [[ "$run_mode" =~ ^("commit"|"push"|"commit+push")$ ]]; then
+        FILE=".git"
+        if [ ! -f "$FILE" ]; then
+            SOURCE="${BASH_SOURCE[0]}"
+            GOTO=`dirname $SOURCE | sed 's/^.\///' ` # get path without ./
+            cd $GOTO
+        fi
+        CURRENT=`pwd`
+        REPO_NAME=`basename "$CURRENT"`
+        GITHUB_DOMAIN="@github.com/anacortesftcrobotics/$REPO_NAME$FILE"
+        case $run_mode in
+            "commit") check_commit;;
+            "push") check_push;;
+            "commit+push") check_commit;check_push;;
+        esac
+    else
+        echo "Please call with one of the following parameters: commit, push, commit+push"
     fi
-    check_commit
 }
 
 "$@"
